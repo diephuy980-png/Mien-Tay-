@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Đặt Hàng - Miền Tây Quán</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { 700: '#2E7D32', 800: '#1E4620', 900: '#173819' } }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Nền vàng nhạt chuẩn Google Forms */
+        body {
+            background-color: #fbf9f1; 
+            color: #202124;
+        }
+
+        /* Thẻ câu hỏi chuẩn Google Form */
+        .gf-card {
+            background-color: white;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 12px;
+            transition: box-shadow 0.3s;
+        }
+        .gf-card:focus-within {
+            box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+        }
+
+        /* Thẻ Header (Có viền màu trên cùng) */
+        .gf-header-card {
+            border-top: 10px solid #2E7D32;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        /* Input chỉ có đường gạch dưới chuẩn Google */
+        .gf-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #dadce0;
+            padding: 8px 0;
+            font-size: 15px;
+            color: #202124;
+            background-color: transparent;
+            border-radius: 0;
+            transition: border-bottom 0.3s ease;
+        }
+        .gf-input:focus {
+            outline: none;
+            border-bottom: 2px solid #2E7D32;
+            margin-bottom: -1px; /* Tránh giật form khi viền dày lên */
+        }
+
+        /* Banner Ảnh bìa xanh lá */
+        .custom-banner {
+            background: linear-gradient(135deg, #173819 0%, #1E4620 50%, #2E7D32 100%);
+            position: relative;
+            height: 320px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Giữ ảnh không tràn ra ngoài viền cong của banner */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Hạt pattern chìm */
+        .custom-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 20px 20px, rgba(255,255,255,0.08) 2px, transparent 0);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* Khung trung tâm (Glassmorphism) */
+        .banner-center-box {
+            position: relative;
+            z-index: 10; /* Lớp kính mờ ở dưới */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px 24px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            width: 85%;
+            max-width: 360px; /* Thu nhỏ khung giữa để không đè lên ảnh */
+        }
+
+        /* Nút Call to Action */
+        .cta-btn {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 10px 24px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(37,99,235,0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(37,99,235,0.8);
+        }
+
+        /* Khối chứa ảnh ngang - Nổi lên trên cùng (z-index: 20) */
+        .img-cluster {
+            position: absolute;
+            z-index: 20; 
+            display: flex;
+            flex-direction: row; /* Chuyển thành hàng ngang */
+            align-items: center;
+        }
+
+        /* Xếp chồng ảnh lên nhau để tiết kiệm diện tích */
+        .img-cluster img:not(:first-child) {
+            margin-left: -15px;
+        }
+        
+        /* Căn góc cho 2 cụm ảnh, dời sát ra mép ngoài */
+        .cluster-left {
+            top: 12px;
+            left: 12px;
+        }
+        .cluster-right {
+            bottom: 12px;
+            right: 12px;
+        }
+        
+        /* Vòng tròn ảnh đồ ăn */
+        .food-circle {
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.9);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            background-color: white;
+            position: relative; /* Cần thiết cho z-index hoạt động khi hover */
+        }
+        .food-circle:hover {
+            transform: scale(1.15) rotate(5deg);
+            z-index: 30;
+        }
+
+        /* Thu nhỏ kích thước ảnh một chút để vừa vặn hơn */
+        .size-sm { width: 50px; height: 50px; }
+        .size-md { width: 65px; height: 65px; }
+        .size-lg { width: 80px; height: 80px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-spin-slow { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative pb-12">
+
+    <main class="max-w-3xl w-full mx-auto relative z-10 px-4 sm:px-6 pt-8">
+        
+        <!-- Dải Banner Chuyên Nghiệp -->
+        <div class="custom-banner mb-6 sm:mb-8">
+            
+            <!-- Hàng ảnh ngang ở góc trên Trái -->
+            <div class="img-cluster cluster-left hidden sm:flex">
+                <img src="canh bầu.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Canh+Bau'">
+                <img src="Đăng bán canh cải ngọp.jpg" class="food-circle size-lg" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Rau'">
+                <img src="đăng bán.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Com'">
+                <img src="canh cải bẹ dúng.jpg" class="food-circle size-sm" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Canh'">
+            </div>
+
+            <!-- Khung Logo & Tiêu đề trung tâm -->
+            <div class="banner-center-box">
+                <!-- Logo -->
+                <div class="w-24 h-24 rounded-full bg-[#c8e6c9] border-4 border-white shadow-lg flex items-center justify-center mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full">
+                        <circle cx="50" cy="50" r="50" fill="#c8e6c9" />
+                        <circle cx="50" cy="50" r="47" fill="none" stroke="#2e7d32" stroke-width="3" />
+                        <circle cx="50" cy="50" r="41" fill="none" stroke="#2e7d32" stroke-width="1.5" />
+                        <g stroke="#4e342e" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M 9 62 Q 25 50 45 60 T 91 55" stroke-width="1" opacity="0.6"/>
+                            <path d="M 18 90 Q 35 85 32 75 T 45 62" stroke-width="1.2"/>
+                            <path d="M 32 91 Q 55 85 45 75 T 58 60" stroke-width="1.2"/>
+                            <path d="M 60 70 Q 75 62 88 68" stroke-width="1.2"/>
+                            <path d="M 50 16 L 10 50 Q 50 64 90 50 Z" fill="#c8e6c9" stroke="#4e342e" stroke-width="2"/>
+                            <path d="M 10 50 Q 50 38 90 50" stroke-width="1" opacity="0.5" stroke-dasharray="2 2"/>
+                            <path d="M 22 41 Q 50 52 78 41" stroke-width="1" opacity="0.7"/>
+                            <path d="M 50 16 Q 40 35 28 54" stroke-width="1" opacity="0.5"/>
+                            <path d="M 50 16 Q 50 35 50 57" stroke-width="1" opacity="0.5"/>
+                            <path d="M 50 16 Q 60 35 72 54" stroke-width="1" opacity="0.5"/>
+                        </g>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-black text-white tracking-wide uppercase drop-shadow-md">Miền Tây Quán</h1>
+                <span class="bg-yellow-400 text-yellow-900 font-bold text-xs px-3 py-1 rounded-full mt-2 shadow-sm">Đặc sản KTX Khu B</span>
+                
+                <!-- Nút cuộn xuống -->
+                <button type="button" onclick="document.getElementById('order-form').scrollIntoView({behavior: 'smooth'})" class="cta-btn mt-5">
+                    ĐẶT ĐƠN NGAY!
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z" /></svg>
+                </button>
+            </div>
+
+            <!-- Hàng ảnh ngang ở góc dưới Phải -->
+            <div class="img-cluster cluster-right hidden sm:flex">
+                <img src="Muối.jpg" class="food-circle size-sm" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Nuoc+Cham'">
+                <img src="trứng.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Trung'">
+                <img src="canh.jpg" class="food-circle size-lg" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Canh'">
+                <img src="z7996040125549_2a47cdb71a4cfdef59cb6cdb860ad442.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Com+Ga'">
+            </div>
+        </div>
+
+        <!-- Màn hình Khóa Đơn (Đóng cửa) -->
+        <div id="closed-message" class="hidden bg-white rounded-xl shadow border-t-[10px] border-red-600 overflow-hidden p-8 text-center max-w-xl mx-auto mt-6 animate-[fadeIn_0.5s_ease-out]">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Quán Đã Chốt Đơn</h2>
+            <p class="text-gray-600 text-lg">Quán đã chốt đơn hôm nay rồi. Các elm bé thông cảm quay lại đặt vào ngày mai nha!</p>
+            <div class="mt-8 pt-6 border-t border-gray-100"><p class="text-sm font-bold text-brand-800">Miền Tây Quán Chân Thành Cảm Ơn Các Bạn ❤️</p></div>
+        </div>
+
+        <!-- Form Container Chuẩn Google Forms -->
+        <form id="order-form" onsubmit="submitForm(event)">
+            
+            <div class="gf-card gf-header-card">
+                <h1 class="text-3xl font-semibold mb-2">Phiếu Đặt Cơm - Miền Tây Quán</h1>
+                <p class="text-gray-600 text-sm mb-4">Các Elm Bé Điền Thông Tin Giúp Quán Nha ❤️</p>
+                <div class="border-t border-gray-200 pt-3">
+                    <span class="text-red-600 text-sm font-medium">* Biểu thị câu hỏi bắt buộc</span>
+                </div>
+            </div>
+
+            <!-- Câu 1 -->
+            <div class="gf-card">
+                <label for="food-name" class="block text-[16px] font-medium text-gray-800 mb-1">
+                    Tên món ăn <span class="text-red-600">*</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-6">(Note thêm nếu có)</p>
+                <input type="text" id="food-name" name="foodName" required placeholder="Ví dụ: Cơm gà xá xíu..." class="gf-input">
+            </div>
+
+            <!-- Câu 2 -->
+            <div class="gf-card">
+                <label for="quantity" class="block text-[16px] font-medium text-gray-800 mb-6">
+                    Số lượng (Phần) <span class="text-red-600">*</span>
+                </label>
+                <input type="number" id="quantity" name="quantity" min="1" required placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
+            </div>
+            
+            <!-- Câu 3 -->
+            <div class="gf-card">
+                <label for="location" class="block text-[16px] font-medium text-gray-800 mb-1">
+                    Địa điểm đặt cơm (cổng, rào) <span class="text-red-600">*</span>
+                </label>
+                <p class="text-xs text-gray-500 mb-6">Vui lòng ghi rõ vị trí để shipper dễ tìm</p>
+                <input type="text" id="location" name="location" required placeholder="Câu trả lời của bạn" class="gf-input">
+            </div>
+
+            <!-- Câu 4 -->
+            <div class="gf-card">
+                <label for="delivery-time" class="block text-[16px] font-medium text-gray-800 mb-6">
+                    Giờ nhận cơm <span class="text-red-600">*</span>
+                </label>
+                <input type="time" id="delivery-time" name="time" required class="gf-input sm:w-1/3 cursor-pointer">
+            </div>
+
+            <!-- Câu 5 -->
+            <div class="gf-card">
+                <label for="phone" class="block text-[16px] font-medium text-gray-800 mb-6">
+                    Số điện thoại liên hệ <span class="text-red-600">*</span>
+                </label>
+                <input type="tel" id="phone" name="phone" required placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
+            </div>
+
+            <!-- Câu 6 -->
+            <div class="gf-card">
+                <label class="block text-[16px] font-medium text-gray-800 mb-4">Tùy chọn thêm</label>
+                <label class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded w-max">
+                    <input type="checkbox" id="extra-rice" name="extraRice" class="w-5 h-5 cursor-pointer accent-brand-700">
+                    <span class="text-gray-800 text-[15px]">Lấy thêm cơm <span class="text-brand-700 ml-1">(Free)</span></span>
+                </label>
+            </div>
+
+            <!-- Nút Submit -->
+            <div class="flex justify-between items-center mt-4 mb-10">
+                <button type="submit" id="submit-btn" class="bg-brand-700 hover:bg-brand-800 text-white font-medium text-[14px] px-6 py-2.5 rounded shadow-sm transition-colors flex items-center gap-2">
+                    <span id="submit-text">Gửi</span>
+                    <svg id="submit-spinner" class="hidden animate-spin-slow h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </button>
+                <p class="text-xs text-gray-500 font-medium">Bảo mật bởi Miền Tây Quán</p>
+            </div>
+        </form>
+
+        <!-- Màn hình Thông báo Thành công -->
+        <div id="success-message" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden p-8 text-center max-w-xl mx-auto mt-6 animate-[fadeIn_0.5s_ease-out]">
+            <h2 class="text-2xl font-medium text-gray-900 mb-3">Đã nhận đơn hàng</h2>
+            <p class="text-gray-600 text-sm mb-6">Đơn của bạn đã được ghi nhận. Quán sẽ chuẩn bị <strong id="res-food" class="text-brand-700"></strong> và giao tới <strong id="res-location" class="text-gray-800"></strong> đúng giờ.</p>
+            <button onclick="resetForm()" class="text-brand-700 font-medium text-sm hover:underline focus:outline-none">Gửi phản hồi khác</button>
+        </div>
+    </main>
+
+    <!-- Bảng điều khiển dành cho Chủ quán -->
+    <div class="fixed bottom-4 right-4 z-50 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 max-w-[250px]">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-gray-500 uppercase">Quản trị Quán</span>
+            <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span>
+        </div>
+        <label class="flex items-center cursor-pointer mb-2">
+            <div class="relative">
+                <input type="checkbox" id="admin-toggle" class="sr-only" checked onchange="toggleShop(this.checked)">
+                <div class="block bg-gray-300 w-10 h-6 rounded-full transition-colors" id="toggle-bg"></div>
+                <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform" id="toggle-dot"></div>
+            </div>
+            <div class="ml-3 text-sm font-semibold text-gray-700" id="toggle-label">Quán Đang Mở</div>
+        </label>
+        <p class="text-[10px] text-gray-400 leading-tight">Chỉ chủ quán mới thấy bảng này. Bấm để khóa đơn ngay lập tức.</p>
+    </div>
+
+    <script>
+        // Cấu hình Google Apps Script
+        const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdwJ5iehePOSXHu0MA4Y7dTVLNq8seiiKgPvMvjq3jYemd11jbIfDNThzW7y14cnp7/exec"; 
+        let isAcceptingResponses = true;
+
+        function toggleShop(isOpen) {
+            isAcceptingResponses = isOpen;
+            const bg = document.getElementById('toggle-bg');
+            const dot = document.getElementById('toggle-dot');
+            const label = document.getElementById('toggle-label');
+            const form = document.getElementById('order-form');
+            const closedMsg = document.getElementById('closed-message');
+
+            if (isOpen) {
+                bg.classList.replace('bg-gray-300', 'bg-brand-500');
+                dot.style.transform = 'translateX(100%)';
+                label.innerText = 'Quán Đang Mở';
+                label.classList.replace('text-red-600', 'text-gray-700');
+                form.classList.remove('hidden');
+                closedMsg.classList.add('hidden');
+            } else {
+                bg.classList.replace('bg-brand-500', 'bg-gray-300');
+                dot.style.transform = 'translateX(0)';
+                label.innerText = 'Đã Khóa Đơn';
+                label.classList.replace('text-gray-700', 'text-red-600');
+                form.classList.add('hidden');
+                closedMsg.classList.remove('hidden');
+            }
+        }
+        
+        // Kích hoạt giao diện toggle lần đầu
+        document.addEventListener("DOMContentLoaded", () => toggleShop(true));
+
+        function submitForm(event) {
+            event.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const submitSpinner = document.getElementById('submit-spinner');
+            
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            submitText.innerText = "Đang gửi...";
+            submitSpinner.classList.remove('hidden');
+
+            const foodName = document.getElementById('food-name').value;
+            const quantity = document.getElementById('quantity').value;
+            const time = document.getElementById('delivery-time').value;
+            const phone = document.getElementById('phone').value;
+            const locationVal = document.getElementById('location').value;
+            const extraRice = document.getElementById('extra-rice').checked ? "Có" : "Không";
+
+            document.getElementById('res-food').innerText = foodName;
+            document.getElementById('res-location').innerText = locationVal;
+
+            if (GOOGLE_APP_SCRIPT_URL !== "") {
+                const formData = new URLSearchParams();
+                formData.append("foodName", foodName);
+                formData.append("quantity", quantity);
+                formData.append("location", locationVal);
+                formData.append("time", time);
+                formData.append("phone", phone);
+                formData.append("extraRice", extraRice);
+
+                fetch(GOOGLE_APP_SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' })
+                .then(() => showSuccessMessage())
+                .catch(error => {
+                    alert("Có lỗi mạng. Vui lòng thử lại!");
+                    resetButton(submitBtn, submitText, submitSpinner);
+                });
+            } else {
+                setTimeout(() => {
+                    showSuccessMessage();
+                    resetButton(submitBtn, submitText, submitSpinner);
+                }, 1000);
+            }
+        }
+
+        function showSuccessMessage() {
+            document.getElementById('order-form').classList.add('hidden');
+            document.getElementById('success-message').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetButton(btn, text, spinner) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-80', 'cursor-not-allowed');
+            text.innerText = "Gửi";
+            spinner.classList.add('hidden');
+        }
+
+        function resetForm() {
+            document.getElementById('order-form').reset();
+            document.getElementById('success-message').classList.add('hidden');
+            if (isAcceptingResponses) document.getElementById('order-form').classList.remove('hidden');
+            else document.getElementById('closed-message').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
