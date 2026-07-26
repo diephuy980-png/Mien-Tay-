@@ -19,40 +19,61 @@
     </script>
 
     <style>
-        /* Nền vàng nhạt chuẩn Google Forms */
         body { background-color: #fbf9f1; color: #202124; }
-
-        /* Thẻ câu hỏi chuẩn Google Form */
         .gf-card { background-color: white; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; margin-bottom: 12px; transition: box-shadow 0.3s; }
         .gf-card:focus-within { box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12); }
         .gf-header-card { border-top: 10px solid #2E7D32; border-top-left-radius: 8px; border-top-right-radius: 8px; }
-
-        /* Input chỉ có đường gạch dưới */
         .gf-input { width: 100%; border: none; border-bottom: 1px solid #dadce0; padding: 8px 0; font-size: 15px; color: #202124; background-color: transparent; border-radius: 0; transition: border-bottom 0.3s ease; }
         .gf-input:focus { outline: none; border-bottom: 2px solid #2E7D32; margin-bottom: -1px; }
 
-        /* Banner Ảnh bìa xanh lá */
-        .custom-banner { background: linear-gradient(135deg, #173819 0%, #1E4620 50%, #2E7D32 100%); position: relative; height: 340px; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        /* Banner Background */
+        .custom-banner { background: linear-gradient(135deg, #173819 0%, #1E4620 50%, #2E7D32 100%); position: relative; height: 360px; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .custom-banner::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20px 20px, rgba(255,255,255,0.08) 2px, transparent 0); background-size: 40px 40px; pointer-events: none; }
-        .banner-center-box { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); width: 90%; max-width: 250px; }
-        @media (min-width: 640px) { .banner-center-box { max-width: 360px; } }
+        
+        /* Glassmorphism Center Box (Đã nới rộng một chút để làm không gian cho chòm sao) */
+        .banner-center-box { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25); width: 92%; max-width: 320px; }
+        @media (min-width: 640px) { .banner-center-box { max-width: 420px; padding: 32px; } }
 
         /* Nút CTA */
-        .cta-btn { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 30px; letter-spacing: 1px; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(37,99,235,0.4); transition: all 0.3s ease; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .cta-btn { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 30px; letter-spacing: 1px; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(37,99,235,0.4); transition: all 0.3s ease; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 50; position: relative; }
         .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(37,99,235,0.8); }
 
-        /* Cụm ảnh xếp dọc */
-        .img-cluster { position: absolute; z-index: 20; display: flex; flex-direction: column; align-items: center; }
-        .img-cluster img:not(:first-child) { margin-top: -12px; margin-left: 0; }
-        .cluster-left { top: 50%; left: 8px; transform: translateY(-50%); }
-        .cluster-right { top: 50%; right: 8px; transform: translateY(-50%); }
+        /* ====================================================
+           HIỆU ỨNG CHÒM SAO TÍ HON (NẰM TRONG KÍNH MỜ) 
+           ==================================================== */
+        .star-img {
+            position: absolute;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 8px rgba(255,255,255,0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 15; /* Nằm dưới chữ (z-index 20) nhưng trên nền kính (z-index 10) */
+            background-color: #173819;
+        }
         
-        .food-circle { border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.3s ease; background-color: #173819; position: relative; }
-        .food-circle:hover { transform: scale(1.2) translateX(5px); z-index: 30; }
-        .cluster-right .food-circle:hover { transform: scale(1.2) translateX(-5px); }
+        /* Hiệu ứng tương tác khi chạm vào "ngôi sao" */
+        .star-img:hover {
+            transform: scale(2.5) !important; /* Phóng to cực mạnh để nhìn rõ món ăn */
+            border-color: #fff;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px rgba(255,255,255,0.6);
+            z-index: 40; /* Nổi lên trên cùng khi chạm vào */
+        }
 
-        .size-sm { width: 36px; height: 36px; } .size-md { width: 44px; height: 44px; } .size-lg { width: 52px; height: 52px; }
-        @media (min-width: 640px) { .size-sm { width: 50px; height: 50px; } .size-md { width: 65px; height: 65px; } .size-lg { width: 80px; height: 80px; } .img-cluster img:not(:first-child) { margin-top: -18px; } .cluster-left { left: 20px; } .cluster-right { right: 20px; } .food-circle { border-width: 3px; } }
+        /* Animation lơ lửng nhè nhẹ chia làm 2 nhịp lệch nhau */
+        .float-1 { animation: floating 4s ease-in-out infinite; }
+        .float-2 { animation: floating-reverse 5s ease-in-out infinite; }
+
+        @keyframes floating { 
+            0% { transform: translateY(0px) rotate(0deg); } 
+            50% { transform: translateY(-8px) rotate(3deg); } 
+            100% { transform: translateY(0px) rotate(0deg); } 
+        }
+        @keyframes floating-reverse { 
+            0% { transform: translateY(0px) rotate(0deg); } 
+            50% { transform: translateY(6px) rotate(-4deg); } 
+            100% { transform: translateY(0px) rotate(0deg); } 
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-spin-slow { animation: spin 1s linear infinite; }
@@ -65,17 +86,28 @@
         
         <!-- Banner Hình Ảnh -->
         <div class="custom-banner mb-6 sm:mb-8">
-            <div class="img-cluster cluster-left">
-                <img src="canh bầu.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Canh+Bau'">
-                <img src="Đăng bán canh cải ngọp.jpg" class="food-circle size-lg" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Rau'">
-                <img src="đăng bán.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/2E7D32/FFF?text=Com'">
-                <img src="canh cải bẹ dúng.jpg" class="food-circle size-sm" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Canh'">
-                <!-- Ảnh mới thêm bên trái -->
-                <img src="ảnh đăng.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/2E7D32/FFF?text=Com'">
-            </div>
-
+            
             <div class="banner-center-box">
-                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#c8e6c9] border-4 border-white shadow-lg flex items-center justify-center mb-3">
+                <!-- ==============================================
+                     8 BỨC ẢNH CHÒM SAO (THU NHỎ 1/12 & NẰM GỌN TRONG KÍNH)
+                     ============================================== -->
+                
+                <!-- BÊN TRÁI -->
+                <img src="canh bầu.jpg" class="star-img float-1 w-7 h-7 sm:w-8 sm:h-8" style="top: 10%; left: 5%;" onerror="this.style.display='none'">
+                <img src="đăng bán.jpg" class="star-img float-2 w-8 h-8 sm:w-9 sm:h-9" style="top: 35%; left: 10%;" onerror="this.style.display='none'">
+                <img src="canh cải bẹ dúng.jpg" class="star-img float-1 w-8 h-8 sm:w-9 sm:h-9" style="bottom: 30%; left: 6%;" onerror="this.style.display='none'">
+                <img src="Đăng bán canh cải ngọp.jpg" class="star-img float-2 w-7 h-7 sm:w-8 sm:h-8" style="bottom: 8%; left: 15%;" onerror="this.style.display='none'">
+
+                <!-- BÊN PHẢI -->
+                <img src="ảnh đăng.jpg" class="star-img float-2 w-8 h-8 sm:w-9 sm:h-9" style="top: 12%; right: 8%;" onerror="this.style.display='none'">
+                <img src="trứng.jpg" class="star-img float-1 w-7 h-7 sm:w-8 sm:h-8" style="top: 40%; right: 5%;" onerror="this.style.display='none'">
+                <img src="Muối.jpg" class="star-img float-2 w-8 h-8 sm:w-9 sm:h-9" style="bottom: 35%; right: 12%;" onerror="this.style.display='none'">
+                <img src="ảnh cơm.jpg" class="star-img float-1 w-9 h-9 sm:w-10 sm:h-10" style="bottom: 10%; right: 6%;" onerror="this.style.display='none'">
+
+                <!-- ============================================== -->
+
+                <!-- Khung Logo chính -->
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#c8e6c9] border-4 border-white shadow-xl flex items-center justify-center mb-4 relative z-20">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full">
                         <circle cx="50" cy="50" r="50" fill="#c8e6c9" />
                         <circle cx="50" cy="50" r="47" fill="none" stroke="#2e7d32" stroke-width="3" />
@@ -94,21 +126,14 @@
                         </g>
                     </svg>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase drop-shadow-md leading-tight mb-2">MIỀN TÂY<br>QUÁN</h1>
-                <span class="bg-yellow-400 text-yellow-900 font-bold text-[10px] sm:text-xs px-3 py-1 rounded-full shadow-sm mb-4">Đặc sản KTX Khu B</span>
+                
+                <h1 class="text-2xl sm:text-[28px] font-black text-white tracking-wide uppercase drop-shadow-lg leading-tight mb-2 relative z-20">MIỀN TÂY<br>QUÁN</h1>
+                <span class="bg-yellow-400 text-yellow-900 font-bold text-[11px] sm:text-xs px-4 py-1.5 rounded-full shadow-md mb-5 relative z-20">Đặc sản KTX Khu B</span>
+                
                 <button type="button" onclick="document.getElementById('order-form').scrollIntoView({behavior: 'smooth'})" class="cta-btn">
                     ĐẶT ĐƠN NGAY!
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
                 </button>
-            </div>
-
-            <div class="img-cluster cluster-right">
-                <img src="Muối.jpg" class="food-circle size-sm" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Muoi'">
-                <img src="trứng.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Trung'">
-                <img src="canh.jpg" class="food-circle size-lg" onerror="this.src='https://placehold.co/100x100/2E7D32/FFF?text=Canh'">
-                <!-- Ảnh cơm mới thêm -->
-                <img src="ảnh cơm.jpg" class="food-circle size-md" onerror="this.src='https://placehold.co/100x100/2E7D32/FFF?text=Com+Ga'">
-                <img src="z7996040125549_2a47cdb71a4cfdef59cb6cdb860ad442.jpg" class="food-circle size-sm" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Ga+Nuong'">
             </div>
         </div>
 
@@ -153,8 +178,9 @@
             </div>
 
             <div class="gf-card">
+                <!-- Thêm pattern ràng buộc chỉ nhập số và độ dài chuẩn -->
                 <label for="phone" class="block text-[16px] font-medium text-gray-800 mb-6">Số điện thoại liên hệ <span class="text-red-600">*</span></label>
-                <input type="tel" id="phone" name="phone" required placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
+                <input type="tel" id="phone" name="phone" required pattern="[0-9]{9,11}" title="Vui lòng nhập đúng số điện thoại" placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
             </div>
 
             <div class="gf-card">
@@ -183,29 +209,23 @@
 
     <script>
         // =======================================================
-        // BẢNG ĐIỀU KHIỂN DÀNH CHO CHỦ QUÁN (CHỈNH SỬA Ở ĐÂY)
+        // BẢNG ĐIỀU KHIỂN DÀNH CHO CHỦ QUÁN 
         // =======================================================
         
-        // 1. ĐƯỜNG LINK CÔNG TẮC TỪ GOOGLE SHEETS:
-        // (Xóa chữ DÁN_LINK_CỦA_BẠN_VÀO_ĐÂY và dán link .csv vào giữa 2 dấu ngoặc kép bên dưới)
         const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmr1x4ZhKjnOaOb7Ay3YVnY9HCK5zhr1bY-OWU5lMw877-rqC1A0vKLieuSRUfuOtwtTXQRlNrndkQ/pub?gid=311772569&single=true&output=csv";
 
-        // 2. Đường link Google Apps Script của bạn (Giữ nguyên):
         const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTfP6_EmEckNkzhHE9VSnQQh0hEq7b2hs3fbsxqSVT1qWD7zOwyWC-LVgeKLuzv9mw/exec"; 
         
         // =======================================================
 
-        let QUAN_DANG_MO = true; // Mặc định mở lúc chờ tải dữ liệu
+        let QUAN_DANG_MO = true; 
 
-        // Tự động đọc Checkbox trên Google Sheets để đóng/mở quán
         document.addEventListener("DOMContentLoaded", () => {
-            if (GOOGLE_SHEET_CSV_URL !== "DÁN_LINK_CỦA_BẠN_VÀO_ĐÂY" && GOOGLE_SHEET_CSV_URL !== "") {
+            if (GOOGLE_SHEET_CSV_URL !== "DÁN_LINK_CSV_Ở_ĐÂY" && GOOGLE_SHEET_CSV_URL !== "") {
                 fetch(GOOGLE_SHEET_CSV_URL)
                     .then(response => response.text())
                     .then(csvText => {
-                        // Kiểm tra xem trong file CSV có chữ TRUE (Tức là đang đánh dấu tick ✔️) hay không
                         QUAN_DANG_MO = csvText.toUpperCase().includes("TRUE");
-                        
                         if (!QUAN_DANG_MO) {
                             document.getElementById('order-form').classList.add('hidden');
                             document.getElementById('closed-message').classList.remove('hidden');
@@ -218,7 +238,6 @@
         function submitForm(event) {
             event.preventDefault();
             
-            // Chặn gửi nếu đã khóa quán (phòng hờ sinh viên treo máy)
             if (!QUAN_DANG_MO) {
                 alert("Quán đã khóa đơn, không thể gửi form lúc này!");
                 return;
@@ -236,9 +255,11 @@
             const foodName = document.getElementById('food-name').value;
             const quantity = document.getElementById('quantity').value;
             const time = document.getElementById('delivery-time').value;
-            const phone = document.getElementById('phone').value;
             const locationVal = document.getElementById('location').value;
             const extraRice = document.getElementById('extra-rice').checked ? "Có" : "Không";
+            
+            // XỬ LÝ LỖI MẤT SỐ 0 TRÊN GOOGLE SHEETS BẰNG DẤU NHÁY ĐƠN (')
+            const phone = "'" + document.getElementById('phone').value;
 
             document.getElementById('res-food').innerText = foodName;
             document.getElementById('res-location').innerText = locationVal;
