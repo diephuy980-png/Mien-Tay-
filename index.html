@@ -31,7 +31,7 @@
         .custom-banner::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20px 20px, rgba(255,255,255,0.08) 2px, transparent 0); background-size: 40px 40px; pointer-events: none; }
         
         /* Glassmorphism Center Box */
-        .banner-center-box { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25); width: 92%; max-width: 320px; }
+        .banner-center-box { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 20px; padding: 24px 16px 36px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25); width: 92%; max-width: 320px; }
         @media (min-width: 640px) { .banner-center-box { max-width: 420px; padding: 32px; } }
 
         /* Nút CTA */
@@ -71,18 +71,18 @@
 
         /* Responsive: Điều chỉnh tọa độ cho màn hình di động (<= 640px) */
         @media (max-width: 640px) {
-            .star-img { transform: scale(0.9); } /* Giảm kích thước ảnh trên mobile 1 chút */
+            .star-img { transform: scale(0.85); } /* Giảm kích thước ảnh trên mobile 1 chút */
             
             /* Tọa độ Mobile - Đưa sát vào mép tấm kính, né nút và chữ */
-            .star-1 { top: 5%; left: 3%; }     /* Góc trên cùng trái */
-            .star-2 { top: 35%; left: 2%; }    /* Cạnh trái giữa */
-            .star-3 { bottom: 40%; left: 3%; } /* Dưới cạnh trái giữa */
-            .star-4 { bottom: 5%; left: 15%; } /* Góc dưới trái (né xa góc vuông 1 chút) */
+            .star-1 { top: 6%; left: 4%; }     
+            .star-2 { top: 28%; left: 2%; }    
+            .star-3 { top: 52%; left: 3%; } 
+            .star-4 { bottom: 14%; left: 5%; } /* Né xa nút Đặt đơn */
             
-            .star-5 { top: 8%; right: 3%; }    /* Góc trên cùng phải */
-            .star-6 { top: 35%; right: 2%; }   /* Cạnh phải giữa */
-            .star-7 { bottom: 45%; right: 3%; }/* Dưới cạnh phải giữa */
-            .star-8 { bottom: 5%; right: 10%; }/* Góc dưới phải */
+            .star-5 { top: 10%; right: 4%; }    
+            .star-6 { top: 32%; right: 2%; }   
+            .star-7 { top: 56%; right: 3%; }
+            .star-8 { bottom: 16%; right: 5%; }/* Né xa nút Đặt đơn */
         }
 
         /* Animation */
@@ -104,14 +104,16 @@
         <div class="custom-banner mb-6 sm:mb-8">
             <div class="banner-center-box">
                 <!-- 8 BỨC ẢNH CHÒM SAO -->
-                <img src="canh bầu.jpg" class="star-img float-1 star-1 w-7 h-7 sm:w-8 sm:h-8" onerror="this.style.display='none'">
-                <img src="đăng bán.jpg" class="star-img float-2 star-2 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
-                <img src="canh cải bẹ dúng.jpg" class="star-img float-1 star-3 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
-                <img src="Đăng bán canh cải ngọp.jpg" class="star-img float-2 star-4 w-7 h-7 sm:w-8 sm:h-8" onerror="this.style.display='none'">
-                <img src="ảnh đăng.jpg" class="star-img float-2 star-5 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
-                <img src="trứng.jpg" class="star-img float-1 star-6 w-7 h-7 sm:w-8 sm:h-8" onerror="this.style.display='none'">
-                <img src="Muối.jpg" class="star-img float-2 star-7 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
-                <img src="ảnh cơm.jpg" class="star-img float-1 star-8 w-9 h-9 sm:w-10 sm:h-10" onerror="this.style.display='none'">
+                <img src="canh bầu.jpg" class="star-img float-1 star-1 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
+                <img src="đăng bán.jpg" class="star-img float-2 star-2 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
+                <img src="canh cải bẹ dúng.jpg" class="star-img float-1 star-3 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
+                <img src="Đăng bán canh cải ngọp.jpg" class="star-img float-2 star-4 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
+                <!-- Thay bằng ảnh canh.jpg đã có trên GitHub -->
+                <img src="canh.jpg" class="star-img float-2 star-5 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
+                <img src="trứng.jpg" class="star-img float-1 star-6 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
+                <img src="Muối.jpg" class="star-img float-2 star-7 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
+                <!-- Thay bằng ảnh z799... đã có trên GitHub -->
+                <img src="z7996040125549_2a47cdb71a4cfdef59cb6cdb860ad442.jpg" class="star-img float-1 star-8 w-9 h-9 sm:w-10 sm:h-10" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
 
                 <!-- Logo & Text (Z-index 20 để luôn đè lên ảnh lơ lửng) -->
                 <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#c8e6c9] border-4 border-white shadow-xl flex items-center justify-center mb-4 relative z-20">
