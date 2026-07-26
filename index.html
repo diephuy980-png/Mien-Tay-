@@ -230,37 +230,60 @@
 
         let QUAN_DANG_MO = true; 
 
-        document.addEventListener("DOMContentLoaded", () => {
-            if (GOOGLE_SHEET_CSV_URL !== "DÁN_LINK_CSV_Ở_ĐÂY" && GOOGLE_SHEET_CSV_URL !== "") {
-                fetch(GOOGLE_SHEET_CSV_URL)
-                    .then(response => response.text())
-                    .then(csvText => {
-                        QUAN_DANG_MO = csvText.toUpperCase().includes("TRUE");
-                        if (!QUAN_DANG_MO) {
-                            document.getElementById('order-form').classList.add('hidden');
-                            document.getElementById('closed-message').classList.remove('hidden');
-                        }
-                    })
-                    .catch(error => console.error("Lỗi đọc trạng thái quán:", error));
+        // Hàm kiểm tra trạng thái quán mới nhất (có chống cache mạnh mẽ)
+        async function checkShopStatus() {
+            if (GOOGLE_SHEET_CSV_URL === "DÁN_LINK_CSV_Ở_ĐÂY" || GOOGLE_SHEET_CSV_URL === "") {
+                return true; 
+            }
+            try {
+                // Thêm timestamp để ép trình duyệt tải dữ liệu mới 100% từ Google
+                const antiCacheUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
+                const response = await fetch(antiCacheUrl);
+                const csvText = await response.text();
+                return csvText.toUpperCase().includes("TRUE");
+            } catch (error) {
+                console.error("Lỗi đọc trạng thái quán:", error);
+                return true; // Nếu lỗi mạng thì tạm cho phép để không chặn nhầm khách
+            }
+        }
+
+        // Lần 1: Kiểm tra ngay khi vừa mở trang
+        document.addEventListener("DOMContentLoaded", async () => {
+            QUAN_DANG_MO = await checkShopStatus();
+            if (!QUAN_DANG_MO) {
+                document.getElementById('order-form').classList.add('hidden');
+                document.getElementById('closed-message').classList.remove('hidden');
             }
         });
 
-        function submitForm(event) {
+        // Lần 2: CHỐT CHẶN KÉP - Kiểm tra lại ngay trước khi gửi dữ liệu đi
+        async function submitForm(event) {
             event.preventDefault();
             
-            if (!QUAN_DANG_MO) {
-                alert("Quán đã khóa đơn, không thể gửi form lúc này!");
-                return;
-            }
-
             const submitBtn = document.getElementById('submit-btn');
             const submitText = document.getElementById('submit-text');
             const submitSpinner = document.getElementById('submit-spinner');
             
+            // Hiện hiệu ứng đang tải để khách chờ
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
-            submitText.innerText = "Đang gửi...";
+            submitText.innerText = "Đang kiểm tra...";
             submitSpinner.classList.remove('hidden');
+
+            // HỎI LẠI GOOGLE SHEET TRƯỚC KHI GỬI
+            QUAN_DANG_MO = await checkShopStatus();
+            
+            if (!QUAN_DANG_MO) {
+                alert("Rất tiếc! Quán vừa mới chốt đơn xong, mong bạn thông cảm quay lại ngày mai nhé!");
+                document.getElementById('order-form').classList.add('hidden');
+                document.getElementById('closed-message').classList.remove('hidden');
+                resetButton(submitBtn, submitText, submitSpinner);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return; // Chặn đứng tại đây, dữ liệu không bị gửi đi
+            }
+
+            // Nếu quán vẫn mở, tiếp tục gửi form
+            submitText.innerText = "Đang gửi...";
 
             const foodName = document.getElementById('food-name').value;
             const quantity = document.getElementById('quantity').value;
@@ -310,9 +333,13 @@
             spinner.classList.add('hidden');
         }
 
-        function resetForm() {
+        // Lần 3: Kiểm tra lại nếu khách muốn gửi đơn tiếp theo
+        async function resetForm() {
             document.getElementById('order-form').reset();
             document.getElementById('success-message').classList.add('hidden');
+            
+            QUAN_DANG_MO = await checkShopStatus();
+            
             if (QUAN_DANG_MO) {
                 document.getElementById('order-form').classList.remove('hidden');
             } else {
