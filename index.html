@@ -30,7 +30,7 @@
         .custom-banner { background: linear-gradient(135deg, #173819 0%, #1E4620 50%, #2E7D32 100%); position: relative; height: 360px; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .custom-banner::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20px 20px, rgba(255,255,255,0.08) 2px, transparent 0); background-size: 40px 40px; pointer-events: none; }
         
-        /* Glassmorphism Center Box (Đã nới rộng một chút để làm không gian cho chòm sao) */
+        /* Glassmorphism Center Box */
         .banner-center-box { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25); width: 92%; max-width: 320px; }
         @media (min-width: 640px) { .banner-center-box { max-width: 420px; padding: 32px; } }
 
@@ -38,9 +38,7 @@
         .cta-btn { background: linear-gradient(90deg, #3b82f6, #2563eb); color: white; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 30px; letter-spacing: 1px; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(37,99,235,0.4); transition: all 0.3s ease; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 50; position: relative; }
         .cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(37,99,235,0.8); }
 
-        /* ====================================================
-           HIỆU ỨNG CHÒM SAO TÍ HON (NẰM TRONG KÍNH MỜ) 
-           ==================================================== */
+        /* HIỆU ỨNG CHÒM SAO TÍ HON */
         .star-img {
             position: absolute;
             border-radius: 50%;
@@ -48,65 +46,74 @@
             border: 1.5px solid rgba(255, 255, 255, 0.85);
             box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 8px rgba(255,255,255,0.2);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 15; /* Nằm dưới chữ (z-index 20) nhưng trên nền kính (z-index 10) */
+            z-index: 15; /* Dưới chữ (z-index 20) nhưng trên nền kính (z-index 10) */
             background-color: #173819;
         }
         
-        /* Hiệu ứng tương tác khi chạm vào "ngôi sao" */
         .star-img:hover {
-            transform: scale(2.5) !important; /* Phóng to cực mạnh để nhìn rõ món ăn */
+            transform: scale(2.5) !important;
             border-color: #fff;
             box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px rgba(255,255,255,0.6);
-            z-index: 40; /* Nổi lên trên cùng khi chạm vào */
+            z-index: 40;
         }
 
-        /* Animation lơ lửng nhè nhẹ chia làm 2 nhịp lệch nhau */
+        /* Tọa độ các bức ảnh (Mặc định cho Desktop) */
+        /* TRÁI */
+        .star-1 { top: 10%; left: 5%; }
+        .star-2 { top: 35%; left: 10%; }
+        .star-3 { bottom: 30%; left: 6%; }
+        .star-4 { bottom: 8%; left: 15%; }
+        /* PHẢI */
+        .star-5 { top: 12%; right: 8%; }
+        .star-6 { top: 40%; right: 5%; }
+        .star-7 { bottom: 35%; right: 12%; }
+        .star-8 { bottom: 10%; right: 6%; }
+
+        /* Responsive: Điều chỉnh tọa độ cho màn hình di động (<= 640px) */
+        @media (max-width: 640px) {
+            .star-img { transform: scale(0.9); } /* Giảm kích thước ảnh trên mobile 1 chút */
+            
+            /* Tọa độ Mobile - Đưa sát vào mép tấm kính, né nút và chữ */
+            .star-1 { top: 5%; left: 3%; }     /* Góc trên cùng trái */
+            .star-2 { top: 35%; left: 2%; }    /* Cạnh trái giữa */
+            .star-3 { bottom: 40%; left: 3%; } /* Dưới cạnh trái giữa */
+            .star-4 { bottom: 5%; left: 15%; } /* Góc dưới trái (né xa góc vuông 1 chút) */
+            
+            .star-5 { top: 8%; right: 3%; }    /* Góc trên cùng phải */
+            .star-6 { top: 35%; right: 2%; }   /* Cạnh phải giữa */
+            .star-7 { bottom: 45%; right: 3%; }/* Dưới cạnh phải giữa */
+            .star-8 { bottom: 5%; right: 10%; }/* Góc dưới phải */
+        }
+
+        /* Animation */
         .float-1 { animation: floating 4s ease-in-out infinite; }
         .float-2 { animation: floating-reverse 5s ease-in-out infinite; }
 
-        @keyframes floating { 
-            0% { transform: translateY(0px) rotate(0deg); } 
-            50% { transform: translateY(-8px) rotate(3deg); } 
-            100% { transform: translateY(0px) rotate(0deg); } 
-        }
-        @keyframes floating-reverse { 
-            0% { transform: translateY(0px) rotate(0deg); } 
-            50% { transform: translateY(6px) rotate(-4deg); } 
-            100% { transform: translateY(0px) rotate(0deg); } 
-        }
-
+        @keyframes floating { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-8px) rotate(3deg); } 100% { transform: translateY(0px) rotate(0deg); } }
+        @keyframes floating-reverse { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(6px) rotate(-4deg); } 100% { transform: translateY(0px) rotate(0deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-spin-slow { animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
+
 <body class="antialiased min-h-screen flex flex-col relative pb-12">
 
     <main class="max-w-3xl w-full mx-auto relative z-10 px-4 sm:px-6 pt-8">
         
-        <!-- Banner Hình Ảnh -->
         <div class="custom-banner mb-6 sm:mb-8">
-            
             <div class="banner-center-box">
-                <!-- ==============================================
-                     8 BỨC ẢNH CHÒM SAO (THU NHỎ 1/12 & NẰM GỌN TRONG KÍNH)
-                     ============================================== -->
-                
-                <!-- BÊN TRÁI -->
-                <img src="canh bầu.jpg" class="star-img float-1 w-7 h-7 sm:w-8 sm:h-8" style="top: 10%; left: 5%;" onerror="this.style.display='none'">
-                <img src="đăng bán.jpg" class="star-img float-2 w-8 h-8 sm:w-9 sm:h-9" style="top: 35%; left: 10%;" onerror="this.style.display='none'">
-                <img src="canh cải bẹ dúng.jpg" class="star-img float-1 w-8 h-8 sm:w-9 sm:h-9" style="bottom: 30%; left: 6%;" onerror="this.style.display='none'">
-                <img src="Đăng bán canh cải ngọp.jpg" class="star-img float-2 w-7 h-7 sm:w-8 sm:h-8" style="bottom: 8%; left: 15%;" onerror="this.style.display='none'">
+                <!-- 8 BỨC ẢNH CHÒM SAO -->
+                <img src="canh bầu.jpg" class="star-img float-1 star-1 w-7 h-7 sm:w-8 sm:h-8" onerror="this.style.display='none'">
+                <img src="đăng bán.jpg" class="star-img float-2 star-2 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
+                <img src="canh cải bẹ dúng.jpg" class="star-img float-1 star-3 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
+                <img src="Đăng bán canh cải ngọp.jpg" class="star-img float-2 star-4 w-7 h-7 sm:w-8 sm:h-8" onerror="this.style.display='none'">
+                <img src="ảnh đăng.jpg" class="star-img float-2 star-5 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
+                <img src="trứng.jpg" class="star-img float-1 star-6 w-7 h-7 sm:w-8 sm:h-8" onerror="this.style.display='none'">
+                <img src="Muối.jpg" class="star-img float-2 star-7 w-8 h-8 sm:w-9 sm:h-9" onerror="this.style.display='none'">
+                <img src="ảnh cơm.jpg" class="star-img float-1 star-8 w-9 h-9 sm:w-10 sm:h-10" onerror="this.style.display='none'">
 
-                <!-- BÊN PHẢI -->
-                <img src="ảnh đăng.jpg" class="star-img float-2 w-8 h-8 sm:w-9 sm:h-9" style="top: 12%; right: 8%;" onerror="this.style.display='none'">
-                <img src="trứng.jpg" class="star-img float-1 w-7 h-7 sm:w-8 sm:h-8" style="top: 40%; right: 5%;" onerror="this.style.display='none'">
-                <img src="Muối.jpg" class="star-img float-2 w-8 h-8 sm:w-9 sm:h-9" style="bottom: 35%; right: 12%;" onerror="this.style.display='none'">
-                <img src="ảnh cơm.jpg" class="star-img float-1 w-9 h-9 sm:w-10 sm:h-10" style="bottom: 10%; right: 6%;" onerror="this.style.display='none'">
-
-                <!-- ============================================== -->
-
-                <!-- Khung Logo chính -->
+                <!-- Logo & Text (Z-index 20 để luôn đè lên ảnh lơ lửng) -->
                 <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#c8e6c9] border-4 border-white shadow-xl flex items-center justify-center mb-4 relative z-20">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full">
                         <circle cx="50" cy="50" r="50" fill="#c8e6c9" />
@@ -130,6 +137,7 @@
                 <h1 class="text-2xl sm:text-[28px] font-black text-white tracking-wide uppercase drop-shadow-lg leading-tight mb-2 relative z-20">MIỀN TÂY<br>QUÁN</h1>
                 <span class="bg-yellow-400 text-yellow-900 font-bold text-[11px] sm:text-xs px-4 py-1.5 rounded-full shadow-md mb-5 relative z-20">Đặc sản KTX Khu B</span>
                 
+                <!-- Đã cập nhật z-index: 50 trong class cta-btn để nút luôn hiển thị trên cùng -->
                 <button type="button" onclick="document.getElementById('order-form').scrollIntoView({behavior: 'smooth'})" class="cta-btn">
                     ĐẶT ĐƠN NGAY!
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
@@ -137,7 +145,6 @@
             </div>
         </div>
 
-        <!-- Màn hình Khóa Đơn -->
         <div id="closed-message" class="hidden bg-white rounded-xl shadow border-t-[10px] border-red-600 overflow-hidden p-8 text-center max-w-xl mx-auto mt-6 animate-[fadeIn_0.5s_ease-out]">
             <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Quán Đã Chốt Đơn</h2>
             <p class="text-gray-600 text-lg">Quán đã chốt đơn hôm nay rồi. Các elm bé thông cảm quay lại đặt vào ngày mai nha!</p>
@@ -178,8 +185,8 @@
             </div>
 
             <div class="gf-card">
-                <!-- Thêm pattern ràng buộc chỉ nhập số và độ dài chuẩn -->
                 <label for="phone" class="block text-[16px] font-medium text-gray-800 mb-6">Số điện thoại liên hệ <span class="text-red-600">*</span></label>
+                <!-- Dùng text hoặc tel thay cho text đơn thuần -->
                 <input type="tel" id="phone" name="phone" required pattern="[0-9]{9,11}" title="Vui lòng nhập đúng số điện thoại" placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
             </div>
 
