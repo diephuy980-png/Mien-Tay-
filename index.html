@@ -88,6 +88,16 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-spin-slow { animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Tùy chỉnh input number ẩn nút mũi tên mặc định của trình duyệt */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 
@@ -97,7 +107,6 @@
         
         <div class="custom-banner mb-6 sm:mb-8">
             <div class="banner-center-box">
-                
                 <!-- 8 BỨC ẢNH CHÒM SAO -->
                 <img src="canh bầu.jpg" class="star-img float-1 star-1 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
                 <img src="đăng bán.jpg" class="star-img float-2 star-2 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
@@ -144,6 +153,7 @@
             <div class="mt-8 pt-6 border-t border-gray-100"><p class="text-sm font-bold text-brand-800">Miền Tây Quán Chân Thành Cảm Ơn Các Bạn ❤️</p></div>
         </div>
 
+        <!-- -->
         <form id="order-form" onsubmit="submitForm(event)">
             <div class="gf-card gf-header-card">
                 <h1 class="text-3xl font-semibold mb-2">Phiếu Đặt Cơm - Miền Tây Quán</h1>
@@ -162,7 +172,7 @@
             </div>
 
             <div class="gf-card">
-                <label for="quantity" class="block text-[16px] font-medium text-gray-800 mb-6">Số lượng (Phần) <span class="text-red-600">*</span></label>
+                <label for="quantity" class="block text-[16px] font-medium text-gray-800 mb-6">Số lượng hộp (Phần) <span class="text-red-600">*</span></label>
                 <input type="number" id="quantity" name="quantity" min="1" required placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
             </div>
             
@@ -182,14 +192,32 @@
                 <input type="tel" id="phone" name="phone" required pattern="[0-9]{9,11}" title="Vui lòng nhập đúng số điện thoại" placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
             </div>
 
+            <!-- TÙY CHỌN CƠM THÊM (Đã nâng cấp) -->
             <div class="gf-card">
-                <label class="block text-[16px] font-medium text-gray-800 mb-4">Tùy chọn thêm</label>
-                <label class="flex items-center space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded w-max">
-                    <input type="checkbox" id="extra-rice" name="extraRice" class="w-5 h-5 cursor-pointer accent-brand-700">
-                    <span class="text-gray-800 text-[15px]">Lấy thêm cơm <span class="text-brand-700 ml-1">(Free)</span></span>
-                </label>
+                <label class="block text-[16px] font-medium text-gray-800 mb-2">Tùy chọn thêm</label>
+                <p class="text-xs text-gray-500 mb-5">Bạn muốn lấy thêm bao nhiêu phần cơm?</p>
+                
+                <div class="flex items-center gap-4 bg-gray-50 w-max px-4 py-2.5 rounded-lg border border-gray-100">
+                    <span class="text-gray-800 text-[15px] font-medium">Số phần cơm thêm <span class="text-brand-700 ml-1 text-sm">(Free)</span></span>
+                    
+                    <div class="flex items-center border border-gray-300 rounded overflow-hidden bg-white shadow-sm ml-2">
+                        <!-- Nút Trừ -->
+                        <button type="button" onclick="adjustExtraRice(-1)" class="w-9 h-9 flex items-center justify-center bg-gray-50 hover:bg-gray-200 text-gray-600 font-bold transition-colors border-r border-gray-200 active:bg-gray-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M20 12H4" /></svg>
+                        </button>
+                        
+                        <!-- Ô Số Lượng -->
+                        <input type="number" id="extra-rice-count" name="extraRice" value="0" min="0" max="20" readonly class="w-10 h-9 text-center text-gray-900 font-semibold focus:outline-none pointer-events-none bg-white">
+                        
+                        <!-- Nút Cộng -->
+                        <button type="button" onclick="adjustExtraRice(1)" class="w-9 h-9 flex items-center justify-center bg-gray-50 hover:bg-gray-200 text-gray-600 font-bold transition-colors border-l border-gray-200 active:bg-gray-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
+            <!-- -->
             <div class="flex justify-between items-center mt-4 mb-10">
                 <button type="submit" id="submit-btn" class="bg-brand-700 hover:bg-brand-800 text-white font-medium text-[14px] px-6 py-2.5 rounded shadow-sm transition-colors flex items-center gap-2">
                     <span id="submit-text">Gửi</span>
@@ -206,15 +234,16 @@
         </div>
     </main>
 
+    <!-- -->
     <script>
         // =======================================================
         // BẢNG ĐIỀU KHIỂN DÀNH CHO CHỦ QUÁN 
         // =======================================================
         
-        // Link đọc trạng thái Mở/Đóng (Tốc độ 1 giây)
+        // Link GVIZ tốc độ siêu cao (Không Cache 5 phút)
         const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/14ls7uGYO-IdibTJzEnVySguZM9-owg9Hj3XVUevn16A/gviz/tq?tqx=out:csv&gid=311772569";
         
-        // Link xử lý Đẩy dữ liệu đơn hàng
+        // Link xử lý App Script để nộp đơn
         const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTfP6_EmEckNkzhHE9VSnQQh0hEq7b2hs3fbsxqSVT1qWD7zOwyWC-LVgeKLuzv9mw/exec"; 
         
         // =======================================================
@@ -222,11 +251,24 @@
         let QUAN_DANG_MO = true; 
         let DON_DA_GUI_THANH_CONG = false;
 
+        // XỬ LÝ NÚT CỘNG TRỪ CƠM THÊM
+        function adjustExtraRice(change) {
+            const input = document.getElementById('extra-rice-count');
+            let currentValue = parseInt(input.value) || 0;
+            let newValue = currentValue + change;
+            
+            // Đảm bảo không nhỏ hơn 0 và không vượt quá 20
+            if (newValue < 0) newValue = 0;
+            if (newValue > 20) newValue = 20;
+            
+            input.value = newValue;
+        }
+
         // 1. TÍNH NĂNG "RADAR": ÂM THẦM KIỂM TRA MỖI 3 GIÂY
         function radarKiemTraQuan() {
             if (GOOGLE_SHEET_CSV_URL === "") return;
             
-            // Tham số &t= để lừa trình duyệt luôn lấy dữ liệu mới nhất
+            // Thêm &t= để lừa trình duyệt bỏ qua Cache hoàn toàn
             const antiCacheUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
             
             fetch(antiCacheUrl)
@@ -243,7 +285,7 @@
                 .catch(error => console.log("Radar đang chờ mạng...", error));
         }
 
-        // Cập nhật giao diện tự động không cần tải lại trang
+        // Cập nhật giao diện tự động
         function capNhatGiaoDienRealTime() {
             // Nếu khách vừa gửi đơn thành công thì kệ, không ẩn giao diện thành công của họ
             if (DON_DA_GUI_THANH_CONG) return; 
@@ -282,7 +324,7 @@
             submitSpinner.classList.remove('hidden');
 
             // --- CHỐT CHẶN GIÂY CUỐI CÙNG ---
-            // Kiểm tra lại Google Sheet đúng tích tắc khách bấm Gửi
+            // Tránh việc khách để treo form lâu rồi bấm gửi
             try {
                 const checkUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
                 const response = await fetch(checkUrl);
@@ -293,7 +335,7 @@
                     QUAN_DANG_MO = false;
                     capNhatGiaoDienRealTime(); // Xóa sổ form ngay lập tức
                     resetButton(submitBtn, submitText, submitSpinner);
-                    return; // NGẮT QUÁ TRÌNH GỬI
+                    return; // Dừng việc gửi
                 }
             } catch(e) {
                 console.log("Mạng khách yếu, bỏ qua bước check cuối.");
@@ -306,9 +348,9 @@
             const quantity = document.getElementById('quantity').value;
             const time = document.getElementById('delivery-time').value;
             const locationVal = document.getElementById('location').value;
-            const extraRice = document.getElementById('extra-rice').checked ? "Có" : "Không";
+            // Lấy con số chính xác thay vì chữ Có/Không
+            const extraRiceCount = document.getElementById('extra-rice-count').value;
             
-            // XỬ LÝ LỖI MẤT SỐ 0 BẰNG DẤU NHÁY ĐƠN (')
             const phone = "'" + document.getElementById('phone').value;
 
             document.getElementById('res-food').innerText = foodName;
@@ -321,9 +363,10 @@
                 formData.append("location", locationVal);
                 formData.append("time", time);
                 formData.append("phone", phone);
-                formData.append("extraRice", extraRice);
+                // Gửi số lượng cơm thêm lên Google Sheets
+                formData.append("extraRice", extraRiceCount);
 
-                // THỦ THUẬT TIMEOUT: Ngắt sau 8 giây nếu Google bị kẹt (Fix lỗi vòng xoay)
+                // THỦ THUẬT TIMEOUT: Ngắt sau 8 giây nếu Google bị kẹt (Chống xoay vòng)
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000); 
 
@@ -339,8 +382,8 @@
                 })
                 .catch(error => {
                     clearTimeout(timeoutId);
-                    // Nếu lỗi do bị ngắt sau 8 giây, ngầm hiểu là đơn ĐÃ ĐƯỢC GỬI THÀNH CÔNG (chỉ là Google trả về chậm)
                     if (error.name === 'AbortError') {
+                        // Bị ngắt timeout -> 99% Google đã nhận đơn nhưng nhả kết quả chậm
                         showSuccessMessage();
                     } else {
                         alert("Có lỗi mạng. Vui lòng kiểm tra lại 3G/Wifi!");
@@ -351,7 +394,7 @@
         }
 
         function showSuccessMessage() {
-            DON_DA_GUI_THANH_CONG = true; // Khóa Radar không cho đổi giao diện nữa
+            DON_DA_GUI_THANH_CONG = true; // Tắt tạm radar
             document.getElementById('order-form').classList.add('hidden');
             document.getElementById('success-message').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -365,11 +408,14 @@
         }
 
         function resetForm() {
-            DON_DA_GUI_THANH_CONG = false; // Bật lại Radar
+            DON_DA_GUI_THANH_CONG = false; // Bật lại radar
             document.getElementById('order-form').reset();
+            // Reset số cơm thêm về 0 thủ công vì input[readonly] không tự reset
+            document.getElementById('extra-rice-count').value = '0';
+            
             document.getElementById('success-message').classList.add('hidden');
             
-            // Radar sẽ tự lo việc hiện Form hay hiện bảng Đóng
+            // Gọi radar để quyết định xem form hay bảng Đóng sẽ hiện ra
             radarKiemTraQuan(); 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
