@@ -211,56 +211,105 @@
         // BẢNG ĐIỀU KHIỂN DÀNH CHO CHỦ QUÁN 
         // =======================================================
         
-        // Đã thay thế bằng link gviz tốc độ 0 giây (Real-time)
+        // Link đọc trạng thái Mở/Đóng (Tốc độ 1 giây)
         const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/14ls7uGYO-IdibTJzEnVySguZM9-owg9Hj3XVUevn16A/gviz/tq?tqx=out:csv&gid=311772569";
+        
+        // Link xử lý Đẩy dữ liệu đơn hàng
         const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTfP6_EmEckNkzhHE9VSnQQh0hEq7b2hs3fbsxqSVT1qWD7zOwyWC-LVgeKLuzv9mw/exec"; 
         
         // =======================================================
 
         let QUAN_DANG_MO = true; 
+        let DON_DA_GUI_THANH_CONG = false;
 
-        // Kiểm tra mở/đóng quán khi mới vào trang (Chống cache bằng tham số thời gian)
-        document.addEventListener("DOMContentLoaded", () => {
-            if (GOOGLE_SHEET_CSV_URL !== "DÁN_LINK_CSV_Ở_ĐÂY" && GOOGLE_SHEET_CSV_URL !== "") {
-                const antiCacheUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
-                fetch(antiCacheUrl)
-                    .then(response => response.text())
-                    .then(csvText => {
-                        QUAN_DANG_MO = csvText.toUpperCase().includes("TRUE");
-                        if (!QUAN_DANG_MO) {
-                            document.getElementById('order-form').classList.add('hidden');
-                            document.getElementById('closed-message').classList.remove('hidden');
-                        }
-                    })
-                    .catch(error => console.error("Lỗi đọc trạng thái quán:", error));
+        // 1. TÍNH NĂNG "RADAR": ÂM THẦM KIỂM TRA MỖI 3 GIÂY
+        function radarKiemTraQuan() {
+            if (GOOGLE_SHEET_CSV_URL === "") return;
+            
+            // Tham số &t= để lừa trình duyệt luôn lấy dữ liệu mới nhất
+            const antiCacheUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
+            
+            fetch(antiCacheUrl)
+                .then(response => response.text())
+                .then(csvText => {
+                    const trangThaiHienTai = csvText.toUpperCase().includes("TRUE");
+                    
+                    // Nếu phát hiện trạng thái thay đổi trên Google Sheet -> Lập tức đổi giao diện
+                    if (trangThaiHienTai !== QUAN_DANG_MO) {
+                        QUAN_DANG_MO = trangThaiHienTai;
+                        capNhatGiaoDienRealTime();
+                    }
+                })
+                .catch(error => console.log("Radar đang chờ mạng...", error));
+        }
+
+        // Cập nhật giao diện tự động không cần tải lại trang
+        function capNhatGiaoDienRealTime() {
+            // Nếu khách vừa gửi đơn thành công thì kệ, không ẩn giao diện thành công của họ
+            if (DON_DA_GUI_THANH_CONG) return; 
+
+            const formElement = document.getElementById('order-form');
+            const closedMessage = document.getElementById('closed-message');
+
+            if (QUAN_DANG_MO) {
+                // Quán Mở -> Hiện Form, Ẩn bảng Đóng
+                closedMessage.classList.add('hidden');
+                formElement.classList.remove('hidden');
+            } else {
+                // Quán Đóng -> Ẩn Form ngay lập tức, Hiện bảng Đóng
+                formElement.classList.add('hidden');
+                closedMessage.classList.remove('hidden');
             }
+        }
+
+        // Kích hoạt Radar ngay khi web vừa tải xong
+        document.addEventListener("DOMContentLoaded", () => {
+            radarKiemTraQuan(); // Quét lần 1
+            setInterval(radarKiemTraQuan, 3000); // Cứ 3 giây quét 1 lần
         });
 
-        // Hàm xử lý gửi đơn (Có tích hợp Timeout chống kẹt nút)
-        function submitForm(event) {
+        // 2. XỬ LÝ KHI BẤM NÚT GỬI ĐƠN
+        async function submitForm(event) {
             event.preventDefault();
             
-            // Chốt chặn 1: Kiểm tra biến trạng thái
-            if (!QUAN_DANG_MO) {
-                alert("Quán đã khóa đơn, không thể gửi form lúc này!");
-                return;
-            }
-
             const submitBtn = document.getElementById('submit-btn');
             const submitText = document.getElementById('submit-text');
             const submitSpinner = document.getElementById('submit-spinner');
             
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
-            submitText.innerText = "Đang gửi...";
+            submitText.innerText = "Đang kiểm tra...";
             submitSpinner.classList.remove('hidden');
+
+            // --- CHỐT CHẶN GIÂY CUỐI CÙNG ---
+            // Kiểm tra lại Google Sheet đúng tích tắc khách bấm Gửi
+            try {
+                const checkUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
+                const response = await fetch(checkUrl);
+                const csvText = await response.text();
+                
+                if (!csvText.toUpperCase().includes("TRUE")) {
+                    alert("Rất tiếc! Quán vừa chốt đơn đúng lúc bạn bấm gửi. Vui lòng quay lại vào ngày mai nhé!");
+                    QUAN_DANG_MO = false;
+                    capNhatGiaoDienRealTime(); // Xóa sổ form ngay lập tức
+                    resetButton(submitBtn, submitText, submitSpinner);
+                    return; // NGẮT QUÁ TRÌNH GỬI
+                }
+            } catch(e) {
+                console.log("Mạng khách yếu, bỏ qua bước check cuối.");
+            }
+            // --- HẾT CHỐT CHẶN ---
+
+            submitText.innerText = "Đang gửi...";
 
             const foodName = document.getElementById('food-name').value;
             const quantity = document.getElementById('quantity').value;
             const time = document.getElementById('delivery-time').value;
             const locationVal = document.getElementById('location').value;
             const extraRice = document.getElementById('extra-rice').checked ? "Có" : "Không";
-            const phone = "'" + document.getElementById('phone').value; // Sửa lỗi mất số 0
+            
+            // XỬ LÝ LỖI MẤT SỐ 0 BẰNG DẤU NHÁY ĐƠN (')
+            const phone = "'" + document.getElementById('phone').value;
 
             document.getElementById('res-food').innerText = foodName;
             document.getElementById('res-location').innerText = locationVal;
@@ -274,7 +323,7 @@
                 formData.append("phone", phone);
                 formData.append("extraRice", extraRice);
 
-                // THỦ THUẬT TIMEOUT: Giới hạn thời gian Google phản hồi là 8 giây (tránh kẹt nút)
+                // THỦ THUẬT TIMEOUT: Ngắt sau 8 giây nếu Google bị kẹt (Fix lỗi vòng xoay)
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 8000); 
 
@@ -282,32 +331,27 @@
                     method: 'POST', 
                     body: formData, 
                     mode: 'no-cors',
-                    signal: controller.signal // Ép dừng nếu quá 8 giây
+                    signal: controller.signal 
                 })
                 .then(() => {
-                    clearTimeout(timeoutId); // Tắt đồng hồ đếm ngược nếu gửi xong sớm
+                    clearTimeout(timeoutId);
                     showSuccessMessage();
                 })
                 .catch(error => {
                     clearTimeout(timeoutId);
-                    // Nếu lỗi do hết 8 giây (timeout), ngầm hiểu là đơn ĐÃ ĐƯỢC GỬI THÀNH CÔNG lên Sheet (chỉ là Google trả về chậm)
+                    // Nếu lỗi do bị ngắt sau 8 giây, ngầm hiểu là đơn ĐÃ ĐƯỢC GỬI THÀNH CÔNG (chỉ là Google trả về chậm)
                     if (error.name === 'AbortError') {
-                        console.log("Đã bỏ qua phản hồi chậm của Google.");
                         showSuccessMessage();
                     } else {
-                        alert("Có lỗi mạng. Vui lòng kiểm tra lại kết nối internet!");
+                        alert("Có lỗi mạng. Vui lòng kiểm tra lại 3G/Wifi!");
                         resetButton(submitBtn, submitText, submitSpinner);
                     }
                 });
-            } else {
-                setTimeout(() => {
-                    showSuccessMessage();
-                    resetButton(submitBtn, submitText, submitSpinner);
-                }, 1000);
             }
         }
 
         function showSuccessMessage() {
+            DON_DA_GUI_THANH_CONG = true; // Khóa Radar không cho đổi giao diện nữa
             document.getElementById('order-form').classList.add('hidden');
             document.getElementById('success-message').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -321,13 +365,12 @@
         }
 
         function resetForm() {
+            DON_DA_GUI_THANH_CONG = false; // Bật lại Radar
             document.getElementById('order-form').reset();
             document.getElementById('success-message').classList.add('hidden');
-            if (QUAN_DANG_MO) {
-                document.getElementById('order-form').classList.remove('hidden');
-            } else {
-                document.getElementById('closed-message').classList.remove('hidden');
-            }
+            
+            // Radar sẽ tự lo việc hiện Form hay hiện bảng Đóng
+            radarKiemTraQuan(); 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
