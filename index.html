@@ -46,7 +46,7 @@
             border: 1.5px solid rgba(255, 255, 255, 0.85);
             box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 8px rgba(255,255,255,0.2);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 15; /* Dưới chữ (z-index 20) nhưng trên nền kính (z-index 10) */
+            z-index: 15;
             background-color: #173819;
         }
         
@@ -58,31 +58,25 @@
         }
 
         /* Tọa độ các bức ảnh (Mặc định cho Desktop) */
-        /* TRÁI */
         .star-1 { top: 10%; left: 5%; }
         .star-2 { top: 35%; left: 10%; }
         .star-3 { bottom: 30%; left: 6%; }
         .star-4 { bottom: 8%; left: 15%; }
-        /* PHẢI */
         .star-5 { top: 12%; right: 8%; }
         .star-6 { top: 40%; right: 5%; }
         .star-7 { bottom: 35%; right: 12%; }
         .star-8 { bottom: 10%; right: 6%; }
 
-        /* Responsive: Điều chỉnh tọa độ cho màn hình di động (<= 640px) */
         @media (max-width: 640px) {
-            .star-img { transform: scale(0.85); } /* Giảm kích thước ảnh trên mobile 1 chút */
-            
-            /* Tọa độ Mobile - Đưa sát vào mép tấm kính, né nút và chữ */
+            .star-img { transform: scale(0.85); }
             .star-1 { top: 6%; left: 4%; }     
             .star-2 { top: 28%; left: 2%; }    
             .star-3 { top: 52%; left: 3%; } 
-            .star-4 { bottom: 14%; left: 5%; } /* Né xa nút Đặt đơn */
-            
+            .star-4 { bottom: 14%; left: 5%; } 
             .star-5 { top: 10%; right: 4%; }    
             .star-6 { top: 32%; right: 2%; }   
             .star-7 { top: 56%; right: 3%; }
-            .star-8 { bottom: 16%; right: 5%; }/* Né xa nút Đặt đơn */
+            .star-8 { bottom: 16%; right: 5%; }
         }
 
         /* Animation */
@@ -104,20 +98,18 @@
         <div class="custom-banner mb-6 sm:mb-8">
             <div class="banner-center-box">
                 
-                <!-- 8 BỨC ẢNH CHÒM SAO (Giữ nguyên vẹn 100% tọa độ và code gốc của bạn) -->
+                <!-- 8 BỨC ẢNH CHÒM SAO -->
                 <img src="canh bầu.jpg" class="star-img float-1 star-1 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
                 <img src="đăng bán.jpg" class="star-img float-2 star-2 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
                 <img src="canh cải bẹ dúng.jpg" class="star-img float-1 star-3 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
                 <img src="Đăng bán canh cải ngọp.jpg" class="star-img float-2 star-4 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
-                <!-- Thay bằng ảnh canh.jpg đã có trên GitHub -->
                 <img src="canh.jpg" class="star-img float-2 star-5 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
                 <img src="trứng.jpg" class="star-img float-1 star-6 w-7 h-7 sm:w-8 sm:h-8" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
                 <img src="Muối.jpg" class="star-img float-2 star-7 w-8 h-8 sm:w-9 sm:h-9" onerror="this.src='https://placehold.co/100x100/173819/FFF?text=Loi+Anh'">
-                <!-- Thay bằng ảnh z799... đã có trên GitHub -->
                 <img src="z7996040125549_2a47cdb71a4cfdef59cb6cdb860ad442.jpg" class="star-img float-1 star-8 w-9 h-9 sm:w-10 sm:h-10" onerror="this.src='https://placehold.co/100x100/1E4620/FFF?text=Loi+Anh'">
 
-                <!-- Logo & Text (Z-index 20 để luôn đè lên ảnh lơ lửng) -->
-                <div onclick="secretAdminUnlock()" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#c8e6c9] border-4 border-white shadow-xl flex items-center justify-center mb-4 relative z-20 cursor-pointer" title="Cổng bí mật chủ quán">
+                <!-- Logo & Text -->
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#c8e6c9] border-4 border-white shadow-xl flex items-center justify-center mb-4 relative z-20">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full">
                         <circle cx="50" cy="50" r="50" fill="#c8e6c9" />
                         <circle cx="50" cy="50" r="47" fill="none" stroke="#2e7d32" stroke-width="3" />
@@ -138,10 +130,8 @@
                 </div>
                 
                 <h1 class="text-2xl sm:text-[28px] font-black text-white tracking-wide uppercase drop-shadow-lg leading-tight mb-2 relative z-20">MIỀN TÂY<br>QUÁN</h1>
-                <!-- Đã thu nhỏ badge và thêm icon 😘 -->
                 <span class="bg-yellow-400 text-yellow-900 font-bold text-[10px] sm:text-[11px] px-3 py-1 rounded-full shadow-md mb-5 relative z-20">Tận Tâm Phục Vụ 😘</span>
                 
-                <!-- Đã đổi text, bỏ mũi tên và thêm icon 🤩 -->
                 <button type="button" onclick="document.getElementById('order-form').scrollIntoView({behavior: 'smooth'})" class="cta-btn">
                     ĐẶT ĐƠN NGAY 🤩
                 </button>
@@ -150,15 +140,7 @@
 
         <div id="closed-message" class="hidden bg-white rounded-xl shadow border-t-[10px] border-red-600 overflow-hidden p-8 text-center max-w-xl mx-auto mt-6 animate-[fadeIn_0.5s_ease-out]">
             <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Quán Đã Chốt Đơn</h2>
-            <p class="text-gray-600 text-lg mb-6">Quán đã chốt đơn hôm nay rồi. Các elm bé thông cảm quay lại đặt vào ngày mai nha!</p>
-            
-            <!-- Nút Tải lại và trạng thái tự động kiểm tra -->
-            <button type="button" onclick="manualRecheck()" id="recheck-btn" class="bg-red-50 text-red-600 hover:bg-red-100 font-bold py-2.5 px-6 rounded-full border border-red-200 transition-colors flex items-center justify-center mx-auto gap-2">
-                <svg id="recheck-spinner" class="hidden animate-spin-slow h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span>Kiểm tra lại xem quán mở chưa</span>
-            </button>
-            <p class="text-xs text-gray-400 mt-3 animate-pulse">Trang web đang tự động cập nhật liên tục...</p>
-
+            <p class="text-gray-600 text-lg">Quán đã chốt đơn hôm nay rồi. Các elm bé thông cảm quay lại đặt vào ngày mai nha!</p>
             <div class="mt-8 pt-6 border-t border-gray-100"><p class="text-sm font-bold text-brand-800">Miền Tây Quán Chân Thành Cảm Ơn Các Bạn ❤️</p></div>
         </div>
 
@@ -197,7 +179,6 @@
 
             <div class="gf-card">
                 <label for="phone" class="block text-[16px] font-medium text-gray-800 mb-6">Số điện thoại liên hệ <span class="text-red-600">*</span></label>
-                <!-- Dùng text hoặc tel thay cho text đơn thuần -->
                 <input type="tel" id="phone" name="phone" required pattern="[0-9]{9,11}" title="Vui lòng nhập đúng số điện thoại" placeholder="Câu trả lời của bạn" class="gf-input sm:w-1/2">
             </div>
 
@@ -230,140 +211,56 @@
         // BẢNG ĐIỀU KHIỂN DÀNH CHO CHỦ QUÁN 
         // =======================================================
         
-        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSmr1x4ZhKjnOaOb7Ay3YVnY9HCK5zhr1bY-OWU5lMw877-rqC1A0vKLieuSRUfuOtwtTXQRlNrndkQ/pub?gid=311772569&single=true&output=csv";
-
+        // Đã thay thế bằng link gviz tốc độ 0 giây (Real-time)
+        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/14ls7uGYO-IdibTJzEnVySguZM9-owg9Hj3XVUevn16A/gviz/tq?tqx=out:csv&gid=311772569";
         const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTfP6_EmEckNkzhHE9VSnQQh0hEq7b2hs3fbsxqSVT1qWD7zOwyWC-LVgeKLuzv9mw/exec"; 
         
         // =======================================================
 
         let QUAN_DANG_MO = true; 
-        let autoCheckInterval; // Biến lưu vòng lặp tự động kiểm tra
 
-        // Cổng bí mật của chủ quán (Bấm 5 lần vào logo)
-        let secretClicks = 0;
-        let secretTimer = null;
-        function secretAdminUnlock() {
-            secretClicks++;
-            if (secretClicks >= 5) {
-                if (autoCheckInterval) clearInterval(autoCheckInterval);
-                QUAN_DANG_MO = true;
-                document.getElementById('closed-message').classList.add('hidden');
-                document.getElementById('order-form').classList.remove('hidden');
-                alert("🔐 Đã mở khóa Cổng Bí Mật cho Chủ Quán thành công!");
-                secretClicks = 0;
-            }
-            clearTimeout(secretTimer);
-            secretTimer = setTimeout(() => { secretClicks = 0; }, 2000); // Hết 2s reset đếm
-        }
-
-        // Hàm kiểm tra trạng thái quán mới nhất (Chống cache cực mạnh)
-        async function checkShopStatus() {
-            if (GOOGLE_SHEET_CSV_URL === "DÁN_LINK_CSV_Ở_ĐÂY" || GOOGLE_SHEET_CSV_URL === "") {
-                return true; 
-            }
-            try {
-                // Ép Zalo/FB tải mới tuyệt đối bằng cách dùng thời gian + số ngẫu nhiên
-                const antiCacheUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime() + "&r=" + Math.random();
-                
-                // Đã gỡ bỏ phần headers để tránh lỗi bảo mật CORS (Failed to fetch)
-                // antiCacheUrl đã làm rất tốt nhiệm vụ chống lưu cache
-                const response = await fetch(antiCacheUrl);
-                const csvText = await response.text();
-                return csvText.toUpperCase().includes("TRUE");
-            } catch (error) {
-                console.error("Lỗi đọc trạng thái quán:", error);
-                return true; // Nếu lỗi mạng thì tạm cho phép để không chặn nhầm khách
-            }
-        }
-
-        // Bật Radar tự động kiểm tra khi quán đang đóng
-        function startAutoCheck() {
-            if (autoCheckInterval) clearInterval(autoCheckInterval); // Xóa vòng lặp cũ
-            
-            autoCheckInterval = setInterval(async () => {
-                const isOpen = await checkShopStatus();
-                if (isOpen) {
-                    clearInterval(autoCheckInterval); // Quán mở thì tắt Radar
-                    QUAN_DANG_MO = true;
-                    document.getElementById('closed-message').classList.add('hidden');
-                    document.getElementById('order-form').classList.remove('hidden');
-                    // Tự động cuộn lên form và báo cho khách
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }, 5000); // Radar quét 5 giây / 1 lần
-        }
-
-        // Nút bấm tải lại thủ công cho khách
-        async function manualRecheck() {
-            const btn = document.getElementById('recheck-btn');
-            const spinner = document.getElementById('recheck-spinner');
-            
-            btn.disabled = true;
-            spinner.classList.remove('hidden');
-            
-            const isOpen = await checkShopStatus();
-            if (isOpen) {
-                if (autoCheckInterval) clearInterval(autoCheckInterval);
-                QUAN_DANG_MO = true;
-                document.getElementById('closed-message').classList.add('hidden');
-                document.getElementById('order-form').classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                alert("Quán vẫn đang chốt đơn, bạn vui lòng đợi thêm chút nữa nhé!");
-            }
-            
-            btn.disabled = false;
-            spinner.classList.add('hidden');
-        }
-
-        // Lần 1: Kiểm tra ngay khi vừa mở trang
-        document.addEventListener("DOMContentLoaded", async () => {
-            QUAN_DANG_MO = await checkShopStatus();
-            if (!QUAN_DANG_MO) {
-                document.getElementById('order-form').classList.add('hidden');
-                document.getElementById('closed-message').classList.remove('hidden');
-                startAutoCheck(); // Bật radar chờ quán mở
+        // Kiểm tra mở/đóng quán khi mới vào trang (Chống cache bằng tham số thời gian)
+        document.addEventListener("DOMContentLoaded", () => {
+            if (GOOGLE_SHEET_CSV_URL !== "DÁN_LINK_CSV_Ở_ĐÂY" && GOOGLE_SHEET_CSV_URL !== "") {
+                const antiCacheUrl = GOOGLE_SHEET_CSV_URL + "&t=" + new Date().getTime();
+                fetch(antiCacheUrl)
+                    .then(response => response.text())
+                    .then(csvText => {
+                        QUAN_DANG_MO = csvText.toUpperCase().includes("TRUE");
+                        if (!QUAN_DANG_MO) {
+                            document.getElementById('order-form').classList.add('hidden');
+                            document.getElementById('closed-message').classList.remove('hidden');
+                        }
+                    })
+                    .catch(error => console.error("Lỗi đọc trạng thái quán:", error));
             }
         });
 
-        // Lần 2: CHỐT CHẶN KÉP - Kiểm tra lại ngay trước khi gửi dữ liệu đi
-        async function submitForm(event) {
+        // Hàm xử lý gửi đơn (Có tích hợp Timeout chống kẹt nút)
+        function submitForm(event) {
             event.preventDefault();
             
+            // Chốt chặn 1: Kiểm tra biến trạng thái
+            if (!QUAN_DANG_MO) {
+                alert("Quán đã khóa đơn, không thể gửi form lúc này!");
+                return;
+            }
+
             const submitBtn = document.getElementById('submit-btn');
             const submitText = document.getElementById('submit-text');
             const submitSpinner = document.getElementById('submit-spinner');
             
-            // Hiện hiệu ứng đang tải
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
-            submitText.innerText = "Đang kiểm tra...";
-            submitSpinner.classList.remove('hidden');
-
-            // HỎI LẠI GOOGLE SHEET TRƯỚC KHI GỬI
-            QUAN_DANG_MO = await checkShopStatus();
-            
-            if (!QUAN_DANG_MO) {
-                alert("Rất tiếc! Quán vừa mới chốt đơn xong, mong bạn thông cảm quay lại ngày mai nhé!");
-                document.getElementById('order-form').classList.add('hidden');
-                document.getElementById('closed-message').classList.remove('hidden');
-                resetButton(submitBtn, submitText, submitSpinner);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                startAutoCheck(); // Bật radar chờ quán mở lại
-                return; // Chặn đứng tại đây, dữ liệu không bị gửi đi
-            }
-
-            // Nếu quán vẫn mở, tiếp tục gửi form
             submitText.innerText = "Đang gửi...";
+            submitSpinner.classList.remove('hidden');
 
             const foodName = document.getElementById('food-name').value;
             const quantity = document.getElementById('quantity').value;
             const time = document.getElementById('delivery-time').value;
             const locationVal = document.getElementById('location').value;
             const extraRice = document.getElementById('extra-rice').checked ? "Có" : "Không";
-            
-            // XỬ LÝ LỖI MẤT SỐ 0 TRÊN GOOGLE SHEETS BẰNG DẤU NHÁY ĐƠN (')
-            const phone = "'" + document.getElementById('phone').value;
+            const phone = "'" + document.getElementById('phone').value; // Sửa lỗi mất số 0
 
             document.getElementById('res-food').innerText = foodName;
             document.getElementById('res-location').innerText = locationVal;
@@ -377,11 +274,30 @@
                 formData.append("phone", phone);
                 formData.append("extraRice", extraRice);
 
-                fetch(GOOGLE_APP_SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' })
-                .then(() => showSuccessMessage())
+                // THỦ THUẬT TIMEOUT: Giới hạn thời gian Google phản hồi là 8 giây (tránh kẹt nút)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000); 
+
+                fetch(GOOGLE_APP_SCRIPT_URL, { 
+                    method: 'POST', 
+                    body: formData, 
+                    mode: 'no-cors',
+                    signal: controller.signal // Ép dừng nếu quá 8 giây
+                })
+                .then(() => {
+                    clearTimeout(timeoutId); // Tắt đồng hồ đếm ngược nếu gửi xong sớm
+                    showSuccessMessage();
+                })
                 .catch(error => {
-                    alert("Có lỗi mạng. Vui lòng thử lại!");
-                    resetButton(submitBtn, submitText, submitSpinner);
+                    clearTimeout(timeoutId);
+                    // Nếu lỗi do hết 8 giây (timeout), ngầm hiểu là đơn ĐÃ ĐƯỢC GỬI THÀNH CÔNG lên Sheet (chỉ là Google trả về chậm)
+                    if (error.name === 'AbortError') {
+                        console.log("Đã bỏ qua phản hồi chậm của Google.");
+                        showSuccessMessage();
+                    } else {
+                        alert("Có lỗi mạng. Vui lòng kiểm tra lại kết nối internet!");
+                        resetButton(submitBtn, submitText, submitSpinner);
+                    }
                 });
             } else {
                 setTimeout(() => {
@@ -407,18 +323,12 @@
         function resetForm() {
             document.getElementById('order-form').reset();
             document.getElementById('success-message').classList.add('hidden');
-            
-            // Tự gọi hàm check và bật form
-            checkShopStatus().then(isOpen => {
-                QUAN_DANG_MO = isOpen;
-                if (QUAN_DANG_MO) {
-                    document.getElementById('order-form').classList.remove('hidden');
-                } else {
-                    document.getElementById('closed-message').classList.remove('hidden');
-                    startAutoCheck(); // Bật radar chờ quán mở lại
-                }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            if (QUAN_DANG_MO) {
+                document.getElementById('order-form').classList.remove('hidden');
+            } else {
+                document.getElementById('closed-message').classList.remove('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
