@@ -19,10 +19,89 @@
     </script>
 
     <style>
-        body { background-color: #fbf9f1; color: #202124; }
-        .gf-card { background-color: white; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; margin-bottom: 12px; transition: box-shadow 0.3s; }
-        .gf-card:focus-within { box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12); }
+        /* Đã đổi màu nền thành Light Sage (Xanh lá nhẹ) */
+        body { background-color: #e8efe6; color: #202124; }
+        
+        /* Chỉnh sửa Thẻ Card */
+        .gf-card { 
+            background-color: white; 
+            border: 1px solid #dadce0; 
+            border-radius: 8px; 
+            padding: 24px; 
+            margin-bottom: 12px; 
+            position: relative; /* Cần thiết để neo viền xanh bên hông */
+            transition: box-shadow 0.3s ease, transform 0.3s ease; 
+        }
+
+        /* Tạo dải viền bên hông (Mặc định ẩn với độ rộng 0) */
+        .gf-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; bottom: -1px; /* Bo vừa khít thẻ */
+            width: 0;
+            background-color: #2E7D32; /* Đã đổi sang màu xanh lá chủ đạo của quán */
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            transition: width 0.2s ease-in-out;
+            z-index: 10;
+        }
+
+        /* THANH CÔNG CỤ ĐỊNH DẠNG (ẨN MẶC ĐỊNH) */
+        .format-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+        }
+
+        /* Nút trong thanh công cụ */
+        .format-toolbar button {
+            color: #5f6368;
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .format-toolbar button:hover {
+            background-color: #f1f3f4;
+            color: #202124;
+        }
+
+        /* Dấu gạch dọc phân cách */
+        .format-toolbar .divider {
+            height: 20px;
+            width: 1px;
+            background-color: #dadce0;
+            margin: 0 4px;
+        }
+
+        /* HIỆU ỨNG KHI KHÁCH CLICK VÀO (Nảy lên + Hiện dải xanh + Hiện Thanh công cụ) */
+        .gf-card:focus-within { 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+        }
+        .gf-card:focus-within::before {
+            width: 6px;
+        }
+        .gf-card:focus-within .format-toolbar {
+            max-height: 40px;
+            opacity: 1;
+            margin-top: 8px;
+        }
+
         .gf-header-card { border-top: 10px solid #2E7D32; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+        .gf-header-card::before { display: none; } /* Ẩn dải xanh bên hông ở thẻ Tiêu đề đầu tiên */
+        
         .gf-input { width: 100%; border: none; border-bottom: 1px solid #dadce0; padding: 8px 0; font-size: 15px; color: #202124; background-color: transparent; border-radius: 0; transition: border-bottom 0.3s ease; }
         .gf-input:focus { outline: none; border-bottom: 2px solid #2E7D32; margin-bottom: -1px; }
 
@@ -169,6 +248,18 @@
                 <label for="food-name" class="block text-[16px] font-medium text-gray-800 mb-1">Tên món ăn <span class="text-red-600">*</span></label>
                 <p class="text-xs text-gray-500 mb-6">(Note thêm nếu có)</p>
                 <input type="text" id="food-name" name="foodName" required placeholder="Ví dụ: Cơm gà xá xíu..." class="gf-input">
+                
+                <!-- Thanh công cụ ẩn hiện -->
+                <div class="format-toolbar">
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></svg></button>
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z"/></svg></button>
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6zm-7 2v2h14v-2H5z"/></svg></button>
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg></button>
+                    <div class="divider"></div>
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"/></svg></button>
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/></svg></button>
+                    <button type="button" tabindex="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.27 5L2 6.27l6.97 6.97L6.5 15.5h4.2l-5.6 5.6 1.41 1.41 5.6-5.6v4.2l2.26-2.47L20.73 25 22 23.73 3.27 5zM16 11h3c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5h-3v3zm-5.75-2.25L13.78 5.2 15 4l-4.75-4L5.5 4l1.22 1.22 3.53 3.53z"/></svg></button>
+                </div>
             </div>
 
             <div class="gf-card">
@@ -197,10 +288,10 @@
                 <label class="block text-[16px] font-medium text-gray-800 mb-2">Tùy chọn thêm</label>
                 <p class="text-xs text-gray-500 mb-5">Bạn muốn lấy thêm bao nhiêu phần cơm?</p>
                 
-                <div class="flex items-center gap-4 bg-gray-50 w-max px-4 py-2.5 rounded-lg border border-gray-100">
-                    <span class="text-gray-800 text-[15px] font-medium">Số phần cơm thêm <span class="text-brand-700 ml-1 text-sm">(Free)</span></span>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-gray-50 w-full sm:w-max px-4 py-3 rounded-lg border border-gray-100">
+                    <span class="text-gray-800 text-[15px] font-medium">Số phần cơm thêm <br class="sm:hidden"><span class="text-brand-700 sm:ml-1 text-[13px]">(Free 1 Phần Tương Ứng Theo Số Đơn)</span></span>
                     
-                    <div class="flex items-center border border-gray-300 rounded overflow-hidden bg-white shadow-sm ml-2">
+                    <div class="flex items-center border border-gray-300 rounded overflow-hidden bg-white shadow-sm sm:ml-2 w-max">
                         <!-- Nút Trừ -->
                         <button type="button" onclick="adjustExtraRice(-1)" class="w-9 h-9 flex items-center justify-center bg-gray-50 hover:bg-gray-200 text-gray-600 font-bold transition-colors border-r border-gray-200 active:bg-gray-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M20 12H4" /></svg>
