@@ -319,9 +319,27 @@
         </form>
 
         <div id="success-message" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden p-8 text-center max-w-xl mx-auto mt-6 animate-[fadeIn_0.5s_ease-out]">
-            <h2 class="text-2xl font-medium text-gray-900 mb-3">Đã nhận đơn hàng</h2>
-            <p class="text-gray-600 text-sm mb-6">Đơn của bạn đã được ghi nhận. Quán sẽ chuẩn bị <strong id="res-food" class="text-brand-700"></strong> và giao tới <strong id="res-location" class="text-gray-800"></strong> đúng giờ.</p>
-            <button onclick="resetForm()" class="text-brand-700 font-medium text-sm hover:underline focus:outline-none">Gửi phản hồi khác</button>
+            <h2 class="text-2xl font-bold text-brand-700 mb-2">Đã Nhận Đơn Hàng!</h2>
+            <p class="text-gray-600 text-sm mb-4">Quán đang chuẩn bị <strong id="res-food" class="text-gray-900"></strong> giao tới <strong id="res-location" class="text-gray-900"></strong>.</p>
+            
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6">
+                <p class="text-[15px] font-semibold text-blue-900 mb-2">Quét mã để thanh toán nhanh</p>
+                <p class="text-xs text-blue-700 mb-4">Mã QR đã tự động điền sẵn Nội dung chuyển khoản. Bạn chỉ cần nhập số tiền món ăn!</p>
+                
+                <!-- Khu vực hiển thị mã QR Động -->
+                <div class="flex justify-center mb-3">
+                    <img id="payment-qr" src="" alt="Mã QR Thanh Toán" class="w-48 h-48 object-cover rounded-lg shadow-sm border border-gray-200">
+                </div>
+                
+                <div class="bg-white rounded p-3 text-left shadow-sm border border-gray-100">
+                    <p class="text-xs text-gray-500 mb-1">Hoặc chuyển khoản thủ công:</p>
+                    <p class="text-sm font-bold text-gray-800"><span id="display-bank"></span> - <span id="display-va"></span></p>
+                    <p class="text-xs text-gray-600 mb-1">Chủ TK: <span id="display-name"></span></p>
+                    <p class="text-sm text-gray-800 mt-2">Nội dung: <span id="display-message" class="font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded"></span></p>
+                </div>
+            </div>
+
+            <button onclick="resetForm()" class="text-brand-700 font-medium text-sm hover:underline focus:outline-none">Gửi đơn khác</button>
         </div>
     </main>
 
@@ -336,6 +354,14 @@
         
         // Link xử lý App Script để nộp đơn
         const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTfP6_EmEckNkzhHE9VSnQQh0hEq7b2hs3fbsxqSVT1qWD7zOwyWC-LVgeKLuzv9mw/exec"; 
+
+        // ==========================================
+        // CẤU HÌNH TÀI KHOẢN NGÂN HÀNG (Sửa theo PayOS của bạn)
+        // ==========================================
+        const BANK_ID = "BIDV"; // Ví dụ: "MB", "TCB", "VCB", "ICB" (Vietinbank)
+        const BANK_ACCOUNT = "7420475624"; // Gõ số tài khoản thật mà bạn vừa liên kết trên PayOS
+        const ACCOUNT_NAME = "DIEP THANH HUY"; // Tên chủ tài khoản
+        // ==========================================
         
         // =======================================================
 
@@ -442,10 +468,24 @@
             // Lấy con số chính xác thay vì chữ Có/Không
             const extraRiceCount = document.getElementById('extra-rice-count').value;
             
-            const phone = "'" + document.getElementById('phone').value;
+            const rawPhone = document.getElementById('phone').value;
+            const phone = "'" + rawPhone;
 
             document.getElementById('res-food').innerText = foodName;
             document.getElementById('res-location').innerText = locationVal;
+
+            // ---- TẠO MÃ QR ĐỘNG TỪ VIETQR ----
+            // Lấy 3 số cuối điện thoại làm nội dung
+            const transferMessage = rawPhone.slice(-3); 
+            // Tạo link API mã QR của VietQR (chuẩn Napas)
+            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${BANK_ACCOUNT}-compact2.png?addInfo=${transferMessage}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+            
+            document.getElementById('payment-qr').src = qrUrl;
+            document.getElementById('display-bank').innerText = BANK_ID;
+            document.getElementById('display-va').innerText = BANK_ACCOUNT;
+            document.getElementById('display-name').innerText = ACCOUNT_NAME;
+            document.getElementById('display-message').innerText = transferMessage;
+            // ----------------------------------
 
             if (GOOGLE_APP_SCRIPT_URL !== "") {
                 const formData = new URLSearchParams();
