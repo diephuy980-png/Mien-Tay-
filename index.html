@@ -328,7 +328,19 @@
                 
                 <!-- Khu vực hiển thị mã QR Động -->
                 <div class="flex justify-center mb-3">
-                    <img id="payment-qr" src="" alt="Mã QR Thanh Toán" class="w-48 h-48 object-cover rounded-lg shadow-sm border border-gray-200">
+                    <img id="payment-qr" src="" alt="Mã QR Thanh Toán" class="w-full max-w-[280px] h-auto object-contain rounded-xl shadow-sm border border-gray-200 bg-white">
+                </div>
+
+                <!-- CỤM NÚT TRỢ GIÚP CHO ĐIỆN THOẠI -->
+                <div class="flex flex-col sm:flex-row gap-2 justify-center mb-4">
+                    <button type="button" onclick="downloadQRImage()" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-medium py-2 px-3 rounded-lg text-sm flex items-center justify-center gap-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v12m0 0l-4-4m4 4l4-4"></path></svg>
+                        Tải Mã QR về máy
+                    </button>
+                    <button type="button" onclick="copyPaymentInfo()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-3 rounded-lg text-sm border border-gray-300 flex items-center justify-center gap-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Copy STK & Nội dung
+                    </button>
                 </div>
                 
                 <div class="bg-white rounded p-3 text-left shadow-sm border border-gray-100">
@@ -356,10 +368,10 @@
         const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTfP6_EmEckNkzhHE9VSnQQh0hEq7b2hs3fbsxqSVT1qWD7zOwyWC-LVgeKLuzv9mw/exec"; 
 
         // ==========================================
-        // CẤU HÌNH TÀI KHOẢN NGÂN HÀNG
+        // CẤU HÌNH TÀI KHOẢN NGÂN HÀNG (Đã cập nhật theo ảnh Timo của bạn)
         // ==========================================
-        const BANK_ID = "TIMO"; // Đã đổi sang Timo Bank
-        const BANK_ACCOUNT = "0849114383"; // ⚠️ BẠN NHỚ SỬA LẠI CHỖ NÀY THÀNH SỐ TÀI KHOẢN TIMO THẬT NHÉ
+        const BANK_ID = "TIMO"; // Tên chuẩn của Timo trên hệ thống VietQR
+        const BANK_ACCOUNT = "0849114383"; // Số tài khoản trên ảnh của bạn
         const ACCOUNT_NAME = "DIEP THANH HUY"; // Tên chủ tài khoản
         // ==========================================
         
@@ -474,11 +486,33 @@
             document.getElementById('res-food').innerText = foodName;
             document.getElementById('res-location').innerText = locationVal;
 
+            // HÀM LOẠI BỎ DẤU TIẾNG VIỆT (Giúp ngân hàng không bị lỗi phông chữ)
+            function xoaDauTiengViet(str) {
+                str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a");
+                str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e");
+                str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i");
+                str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o");
+                str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u");
+                str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y");
+                str = str.replace(/đ/g,"d");
+                str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+                str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+                str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+                str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+                str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+                str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+                str = str.replace(/Đ/g, "D");
+                return str;
+            }
+
             // ---- TẠO MÃ QR ĐỘNG TỪ VIETQR ----
-            // Lấy 3 số cuối điện thoại làm nội dung
-            const transferMessage = rawPhone.slice(-3); 
+            // Lấy địa điểm (tối đa 15 ký tự, bỏ dấu) ghép với 3 số cuối điện thoại
+            let cleanLocation = xoaDauTiengViet(locationVal).toUpperCase().replace(/[^A-Z0-9 ]/g, "").substring(0, 15).trim();
+            const transferMessage = cleanLocation + " " + rawPhone.slice(-3); 
+            
             // Tạo link API mã QR của VietQR (chuẩn Napas)
-            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${BANK_ACCOUNT}-compact2.png?addInfo=${transferMessage}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+            // Sử dụng template 'compact' thay vì 'compact2' để ẩn dòng 'Số tiền: 0đ'
+            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${BANK_ACCOUNT}-compact.png?addInfo=${encodeURIComponent(transferMessage)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
             document.getElementById('payment-qr').src = qrUrl;
             document.getElementById('display-bank').innerText = BANK_ID;
@@ -529,6 +563,50 @@
             document.getElementById('order-form').classList.add('hidden');
             document.getElementById('success-message').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- CÁC HÀM HỖ TRỢ NÚT BẤM CHO MOBILE ---
+        
+        async function downloadQRImage() {
+            const qrImage = document.getElementById('payment-qr');
+            const imageUrl = qrImage.src;
+            try {
+                const response = await fetch(imageUrl);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'QR_ThanhToan_MienTayQuan.png';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert("✅ Đã tải Mã QR về máy!\n\nBạn mở App Ngân Hàng, chọn 'Quét QR', sau đó chọn 'Quét từ thư viện ảnh' nhé.");
+            } catch (err) {
+                alert("Không thể tải ảnh tự động. Bạn vui lòng chụp màn hình lại nhé!");
+            }
+        }
+
+        function copyPaymentInfo() {
+            const bank = document.getElementById('display-bank').innerText;
+            const va = document.getElementById('display-va').innerText;
+            const name = document.getElementById('display-name').innerText;
+            const message = document.getElementById('display-message').innerText;
+            
+            const textToCopy = `Ngân hàng: ${bank}\nSố tài khoản: ${va}\nChủ tài khoản: ${name}\nNội dung: ${message}`;
+            
+            // Sử dụng textarea ẩn để copy (tương thích mọi trình duyệt và iFrame)
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert("✅ Đã Copy thành công STK và Nội dung!\n\nBạn có thể mở App ngân hàng và dán vào.");
+            } catch (ex) {
+                alert("Lỗi khi copy. Bạn vui lòng copy thủ công nhé.");
+            }
+            document.body.removeChild(textArea);
         }
 
         function resetButton(btn, text, spinner) {
